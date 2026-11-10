@@ -1,0 +1,145 @@
+using System.Text;
+
+List<string> students = new List<string>() {
+    "Иванов Иван;5;4;5;5;4",
+    "Петрова Анна;5;5;5;5;5",
+    "Сидоров Алексей;3;3;4;3",
+    "Кузнецова Мария;4;4;5;4;4",
+    "Смирнов Дмитрий;2;3;2;4",
+    "Васильева Ольга;5;4;5;4;5",
+    "Попов Артём;3;4;3;4;3",
+    "Новикова София;4;5;4;5;4"
+};
+string lineOfStudents = students.ToString();
+string[] names = lineOfStudents.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+string fio;
+string countOfMarks;
+string marks;
+string answer1;
+string answer2;
+string answer3;
+int numOfList;
+string newLine;
+double sr;
+
+//add
+Console.Write("Вы хотите добавить студента? ");
+answer1 = Console.ReadLine();
+
+if (answer1 == "д" || answer1 == "да")
+{
+    Console.Write("Введите ФИО: ");
+    fio = Console.ReadLine().Trim().ToLower(); 
+
+    Console.Write("Сколько оценок вы хотите добавить? ");
+    countOfMarks = Console.ReadLine().Trim();
+
+    string lineOfMarks = "";
+    for (int i = 0; i < int.Parse(countOfMarks); i++)
+    {
+        Console.Write("Введите оценкy: ");
+        marks = Console.ReadLine().Trim();
+        lineOfMarks += ";" + marks;
+    }
+    newLine = $"{fio}{lineOfMarks}";
+    students.Add(newLine);
+}
+
+//edit
+Console.Write("Вы хотите отредактировать оценки студента? ");
+answer2 = Console.ReadLine();
+
+if (answer2 == "д" || answer2 == "да")
+{
+    Console.Write("Введите ФИО для поиска: ");
+    string find = Console.ReadLine().Trim().ToLower();
+
+    for (int i = 0; i < students.Count; i++)
+    {
+        string[] part = students[i].Split(";");
+        if (part[0].ToLower().Contains(find))
+        {
+            Console.WriteLine(students[i]);
+            Console.Write("Какую по счету оценку вы хотите заменить?");
+            int number = int.Parse(Console.ReadLine().Trim());
+
+            Console.Write("Напишите новую оценку: ");
+            part[number] = Console.ReadLine();
+            students[i] = string.Join(";", part);
+        }
+    }
+}
+
+//find
+Console.Write("Вы хотите найти студента? ");
+answer2 = Console.ReadLine();
+
+if (answer2 == "д" || answer2 == "да")
+{
+    Console.Write("Введите ФИО для поиска: ");
+    string find = Console.ReadLine().Trim().ToLower();
+    for (int i = 0; i < students.Count; i++)
+    {
+        string[] part = students[i].Split(";");
+        if (part[0].ToLower().Contains(find))
+        {
+            Console.WriteLine(students[i]);
+        }
+    }
+}
+
+//show
+Console.Write("Вы хотите вывести список? ");
+answer3 = Console.ReadLine();
+if (answer3 == "д" || answer3 == "да")
+{
+    Console.Write("Какой список вы хотите вывести (1.Весь 2.Отличники 3.Хорошисты 4.Троечники 5.Двоечники)? ");
+    numOfList = int.Parse(Console.ReadLine());
+}
+
+   /* foreach (var student in students)
+    {
+        string[] part = student.Split(";");
+        if (part.Length>1)
+        {
+            int sum = 0;
+            int num = part.Length-1;
+            for (int j = 1; j < part.Length; j++){ sum += int.Parse(part[j]);}
+            sr = (double)(sum/num);
+            if(sr>= 4.5) { return (int)Category.Отличник; }
+            else if (sr <= 4.5 && sr >= 3.5) { return (int)Category.Хорошист; }
+            else if (sr <= 3.5 && sr >= 2.5) { return (int)Category.Троечник; }
+            else { return (int)Category.Двоечник; }
+        }
+    }*/
+ /*   switch (numOfList)
+    {
+        case 1:
+            foreach (var student in students) { Console.WriteLine(student); }; 
+            break; 
+        case 2:
+            
+        case 3:
+        case 4:
+        case 5:
+        default: Console.WriteLine("Неизвестный номер списка");
+
+            Category category = numOfList switch
+            {
+                2 => Category.Отличник,
+                3 => Category.Хорошист,
+                4 => Category.Троечник,
+                5 => Category.Двоечник,
+            };
+    }
+
+}
+ */
+public enum Category
+{
+    Отличник,
+    Хорошист,
+    Троечник,
+    Двоечник
+}
