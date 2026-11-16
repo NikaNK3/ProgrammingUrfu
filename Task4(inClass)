@@ -10,8 +10,7 @@ List<string> students = new List<string>() {
     "Попов Артём;3;4;3;4;3",
     "Новикова София;4;5;4;5;4"
 };
-string lineOfStudents = students.ToString();
-string[] names = lineOfStudents.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
 
 string fio;
 string countOfMarks;
@@ -30,7 +29,7 @@ answer1 = Console.ReadLine();
 if (answer1 == "д" || answer1 == "да")
 {
     Console.Write("Введите ФИО: ");
-    fio = Console.ReadLine().Trim().ToLower(); 
+    fio = Console.ReadLine().Trim().ToLower();
 
     Console.Write("Сколько оценок вы хотите добавить? ");
     countOfMarks = Console.ReadLine().Trim();
@@ -84,7 +83,7 @@ if (answer2 == "д" || answer2 == "да")
         string[] part = students[i].Split(";");
         if (part[0].ToLower().Contains(find))
         {
-            Console.WriteLine(students[i]);
+            Console.WriteLine(students[i].ToUpper());
         }
     }
 }
@@ -96,50 +95,48 @@ if (answer3 == "д" || answer3 == "да")
 {
     Console.Write("Какой список вы хотите вывести (1.Весь 2.Отличники 3.Хорошисты 4.Троечники 5.Двоечники)? ");
     numOfList = int.Parse(Console.ReadLine());
-}
 
-   /* foreach (var student in students)
+    var five = new List<string>();
+    var four = new List<string>();
+    var three = new List<string>();
+    var two = new List<string>();
+
+    Console.WriteLine("=============================================================================");
+    Console.WriteLine($"{"Студент",-30} | {"Оценки",-20} | {"Среднее",8} | {"Категория",-12}");
+    Console.WriteLine("=============================================================================");
+
+    foreach (var student in students)
     {
         string[] part = student.Split(";");
-        if (part.Length>1)
+        if (part.Length <= 1) continue;
+
+        fio = part[0].ToUpper();
+        string marksStr = "";
+        int sum = 0;
+        int num = part.Length - 1;
+        for (int j = 1; j < part.Length; j++)
         {
-            int sum = 0;
-            int num = part.Length-1;
-            for (int j = 1; j < part.Length; j++){ sum += int.Parse(part[j]);}
-            sr = (double)(sum/num);
-            if(sr>= 4.5) { return (int)Category.Отличник; }
-            else if (sr <= 4.5 && sr >= 3.5) { return (int)Category.Хорошист; }
-            else if (sr <= 3.5 && sr >= 2.5) { return (int)Category.Троечник; }
-            else { return (int)Category.Двоечник; }
+            marksStr += part[j] + " ";
+            sum += int.Parse(part[j]);
         }
-    }*/
- /*   switch (numOfList)
-    {
-        case 1:
-            foreach (var student in students) { Console.WriteLine(student); }; 
-            break; 
-        case 2:
+        marksStr = marksStr.Trim();
+
+        sr = (double)sum / num;
+
+        int currentCategory = 0;
+        string categoryName = "";
+
+        if (sr >= 4.5) { currentCategory = 2; categoryName = "Отличник"; }
+        else if (sr >= 3.5) { currentCategory = 3; categoryName = "Хорошист"; }
+        else if (sr >= 2.5) { currentCategory = 4; categoryName = "Троечник"; }
+        else { currentCategory = 5; categoryName = "Двоечник"; }
+
+        if (numOfList == 1 || numOfList == currentCategory)
+        {
             
-        case 3:
-        case 4:
-        case 5:
-        default: Console.WriteLine("Неизвестный номер списка");
-
-            Category category = numOfList switch
-            {
-                2 => Category.Отличник,
-                3 => Category.Хорошист,
-                4 => Category.Троечник,
-                5 => Category.Двоечник,
-            };
+            Console.WriteLine($"{fio,-30} | {marksStr,-20} | {sr,8:F2} | {categoryName,-12}");
+        }
     }
+    Console.WriteLine("=============================================================================");
+}
 
-}
- */
-public enum Category
-{
-    Отличник,
-    Хорошист,
-    Троечник,
-    Двоечник
-}
