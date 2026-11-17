@@ -1,0 +1,177 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
+class Programm
+{
+    static void Main(string[] args)
+    {
+        Actions actions = new Actions();
+        actions.AddStudent();
+        actions.EditStudent();
+        actions.FindStudent();
+        actions.ShowStudent();
+    }
+    class Actions
+    {
+        string fio;
+        string countOfMarks;
+        string marks;
+        string answer1;
+        string answer2;
+        string answer3;
+        int numOfList;
+        string newLine;
+
+        List<string> students = new List<string>() {
+        "Иванов Иван;5;4;5;5;4",
+        "Петрова Анна;5;5;5;5;5",
+        "Сидоров Алексей;3;3;4;3",
+        "Кузнецова Мария;4;4;5;4;4",
+        "Смирнов Дмитрий;2;3;2;4",
+        "Васильева Ольга;5;4;5;4;5",
+        "Попов Артём;3;4;3;4;3",
+        "Новикова София;4;5;4;5;4"
+    };
+
+        public void AddStudent()
+        {
+            Console.Write("Вы хотите добавить студента? ");
+            answer1 = Console.ReadLine();
+
+            if (answer1 == "д" || answer1 == "да")
+            {
+                Console.Write("Введите ФИО: ");
+                fio = Console.ReadLine().Trim().ToLower();
+
+                Console.Write("Сколько оценок вы хотите добавить? ");
+                countOfMarks = Console.ReadLine().Trim();
+
+                string lineOfMarks = "";
+                for (int i = 0; i < int.Parse(countOfMarks); i++)
+                {
+                    Console.Write("Введите оценкy: ");
+                    marks = Console.ReadLine().Trim();
+                    lineOfMarks += ";" + marks;
+                }
+                newLine = $"{fio}{lineOfMarks}";
+                students.Add(newLine);
+            }
+        }
+
+        public void EditStudent()
+        {
+            Console.Write("Вы хотите отредактировать оценки студента? ");
+            answer2 = Console.ReadLine();
+
+            if (answer2 == "д" || answer2 == "да")
+            {
+                Console.Write("Введите ФИО для поиска: ");
+                string find = Console.ReadLine().Trim().ToLower();
+
+                for (int i = 0; i < students.Count; i++)
+                {
+                    string[] part = students[i].Split(";");
+                    if (part[0].ToLower().Contains(find))
+                    {
+                        Console.WriteLine(students[i]);
+                        Console.Write("Какую по счету оценку вы хотите заменить?");
+                        int number = int.Parse(Console.ReadLine().Trim());
+
+                        Console.Write("Напишите новую оценку: ");
+                        part[number] = Console.ReadLine();
+                        students[i] = string.Join(";", part);
+                    }
+                }
+            }
+        }
+
+        public void FindStudent()
+        {
+            Console.Write("Вы хотите найти студента? ");
+            answer2 = Console.ReadLine();
+
+            if (answer2 == "д" || answer2 == "да")
+            {
+                Console.Write("Введите ФИО для поиска: ");
+                string find = Console.ReadLine().Trim().ToLower();
+                for (int i = 0; i < students.Count; i++)
+                {
+                    string[] part = students[i].Split(";");
+                    if (part[0].ToLower().Contains(find))
+                    {
+                        Console.WriteLine(students[i].ToUpper());
+                    }
+                }
+            }
+        }
+
+        public void ShowStudent()
+        {
+            Console.Write("Вы хотите вывести список? ");
+            answer3 = Console.ReadLine();
+            if (answer3 == "д" || answer3 == "да")
+            {
+                Console.Write("Какой список вы хотите вывести (1.Весь 2.Отличники 3.Хорошисты 4.Троечники 5.Двоечники)? ");
+                numOfList = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("=============================================================================");
+                Console.WriteLine($"{"Студент",-30} | {"Оценки",-20} | {"Среднее",8} | {"Категория",-12}");
+                Console.WriteLine("=============================================================================");
+
+                foreach (var student in students)
+                {
+
+                    Student currentStudent = new Student(student);
+                    bool shouldDisplay = false;
+
+                    if (numOfList == 1) { shouldDisplay = true; }
+                    else if (numOfList == 2 && currentStudent.Grade == "Отличник") { shouldDisplay = true; }
+                    else if (numOfList == 3 && currentStudent.Grade == "Хорошист") { shouldDisplay = true; }
+                    else if (numOfList == 4 && currentStudent.Grade == "Троечник") { shouldDisplay = true; }
+                    else if (numOfList == 5 && currentStudent.Grade == "Двоечник") { shouldDisplay = true; }
+
+                    if (shouldDisplay)
+                    {
+                        Console.WriteLine($"{currentStudent.FIO,-30} | {currentStudent.Marks,-20} | {currentStudent.Averages,8:F2} | {currentStudent.Grade,-12}");
+                    }
+                }
+                Console.WriteLine("=============================================================================");
+            }
+        }
+    }
+}
+
+public class Student
+{
+    public string FIO { get; }
+    public string Marks { get; }
+    public string Grade { get; }
+    public double Averages { get; set; }
+
+    public Student(string data)
+    {
+        string[] part = data.Split(";");
+        FIO = part[0];
+        string[] marks = part.Skip(1).ToArray();
+        Marks = string.Join(", ", marks);
+        Averages = Average(marks);
+        Grade = GetCategory(Averages);
+    }
+
+    public double Average(string[] marks)
+    {
+        int sum = 0;
+        foreach (var mark in marks)
+        {
+           sum += int.Parse(mark.Trim());
+        }
+        return (double)sum / marks.Length;
+    }
+
+    public string GetCategory(double average)
+    {
+        if (average >= 4.5) return "Отличник";
+        if (average <= 4.5 && average >= 3.5) return "Хорошист";
+        if (average <= 3.5 && average >= 2.5) return "Троечник";
+        return "Двоечник";
+    }
+}
